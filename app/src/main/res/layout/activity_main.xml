@@ -7,7 +7,7 @@
     android:background="@android:color/darker_gray"
     tools:context=".MainActivity">
 
-    <com.sn.develop.widget.ChartView
+    <com.sn.develop.widget.ImageTextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
