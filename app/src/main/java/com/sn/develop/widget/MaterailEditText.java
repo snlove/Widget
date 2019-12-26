@@ -2,7 +2,6 @@ package com.sn.develop.widget;
 
 import android.animation.ObjectAnimator;
 import android.animation.PropertyValuesHolder;
-import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
@@ -17,10 +16,11 @@ import androidx.appcompat.widget.AppCompatEditText;
 import com.sn.develop.R;
 import com.sn.develop.utils.PixUtil;
 
-import java.util.Objects;
 
 /**
  * 兼容材料设计浮动label
+ * editText实际位置，可通过background的bunds去获取
+ * typeArray的实际值
  */
 public class MaterailEditText extends AppCompatEditText {
 
