@@ -6,6 +6,8 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.sn.develop.utils.PixUtil;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,13 +39,17 @@ public class TagLayout extends ViewGroup {
         int heightSize = MeasureSpec.getSize(heightMeasureSpec);
         int useWidth = 0;
         int useHeight = 0;
-        int lineWidth = 0;
-        int lineHeight = 0;
-        int width = 0;
-        int height = 0;
+        int lineWidthUsed = 0;
+        int lineMaxHeight = 0;
+        int lineMaxMargin = 0;
+
         for(int i =0;i<getChildCount();i++){
             View child = getChildAt(i);
-            LayoutParams layoutParams = child.getLayoutParams();
+            MarginLayoutParams layoutParams = (MarginLayoutParams) child.getLayoutParams();
+            int leftMargin = (int) PixUtil.dpToPx(5);
+            int rightMargin = (int) PixUtil.dpToPx(5);
+            int topMargin = (int) PixUtil.dpToPx(5);
+            int bottomMargin = (int) PixUtil.dpToPx(5);
             //将child是MATCH_PARENT单独放起来，因为此时自己的大小没有确定，当自己可能是warp-content时，就无法确定child的宽度
             if(layoutParams.width == LayoutParams.MATCH_PARENT){
                 matchParentViews.add(child);
@@ -53,30 +59,32 @@ public class TagLayout extends ViewGroup {
             int childHeight = child.getMeasuredHeight();
 
             //换行设置，
-            if (lineWidth + childWidth > widthSize){
-                lineWidth = 0;
-                useHeight += lineHeight;
+
+            if (MeasureSpec.getMode(widthMeasureSpec) != MeasureSpec.UNSPECIFIED && lineWidthUsed + childWidth > widthSize){
+                lineWidthUsed = 0;
+                useHeight += lineMaxHeight + lineMaxMargin;
+                lineMaxMargin = 0;
+                lineMaxHeight = 0;
+                measureChildWithMargins(child,widthMeasureSpec,0,heightMeasureSpec,0);
             }
 
             //set the child bound rect
             if(childRects.size() < getChildCount()){
                 childRects.add(new Rect());
             }
-            childRects.get(i).set(lineWidth,useHeight,lineWidth+childWidth,useHeight+childHeight);
+            childRects.get(i).set(lineWidthUsed+leftMargin,useHeight+topMargin,lineWidthUsed+childWidth,useHeight+childHeight+bottomMargin);
 
 
 
-            lineWidth = lineWidth + childWidth;
-            lineHeight = Math.max(lineHeight,childHeight);
-
-
-
-            useWidth = useWidth+child.getMeasuredWidth();
-
-
+            lineWidthUsed = lineWidthUsed + childWidth+leftMargin+rightMargin ;
+            useWidth = Math.max(useWidth,lineWidthUsed);
+            lineMaxHeight = Math.max(lineMaxHeight,childHeight);
+            lineMaxMargin = Math.max(lineMaxMargin,topMargin+bottomMargin);
         }
-        useHeight = useHeight + lineHeight;
-        setMeasuredDimension(widthSize,useHeight);
+
+        int width = useWidth;
+        int height = useHeight + lineMaxHeight;
+        setMeasuredDimension(width,height);
 
     }
 

@@ -9,6 +9,7 @@ import android.graphics.Paint;
 import androidx.annotation.Nullable;
 
 import android.util.AttributeSet;
+import android.view.ViewGroup;
 
 
 import com.sn.develop.utils.PixUtil;
@@ -51,6 +52,18 @@ public class CircleTextView extends androidx.appcompat.widget.AppCompatTextView 
     protected void onDraw(Canvas canvas) {
         canvas.drawRoundRect(0, 0, getWidth(), getHeight(), CORNER_RADIUS, CORNER_RADIUS, paint);
         super.onDraw(canvas);
+    }
+
+
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        int width = getMeasuredWidth();
+        ViewGroup.LayoutParams layoutParams = getLayoutParams();
+        if(layoutParams.width == ViewGroup.LayoutParams.WRAP_CONTENT){
+            width = width +10;
+        }
+        setMeasuredDimension(width,getMeasuredHeight());
     }
 }
 
