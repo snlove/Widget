@@ -14,6 +14,9 @@ public class TagLayout extends ViewGroup {
 
     //存储每个子view的边界值，即相对父view中的位置
     private List<Rect> childRects = new ArrayList<>();
+    private List<View> matchParentViews = new ArrayList<>();
+    private Rect rect;
+
 
     public TagLayout(Context context) {
         super(context);
@@ -30,8 +33,50 @@ public class TagLayout extends ViewGroup {
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        int widthSize = MeasureSpec.getSize(widthMeasureSpec);
+        int heightSize = MeasureSpec.getSize(heightMeasureSpec);
+        int useWidth = 0;
+        int useHeight = 0;
+        int lineWidth = 0;
+        int lineHeight = 0;
+        int width = 0;
+        int height = 0;
+        for(int i =0;i<getChildCount();i++){
+            View child = getChildAt(i);
+            LayoutParams layoutParams = child.getLayoutParams();
+            //将child是MATCH_PARENT单独放起来，因为此时自己的大小没有确定，当自己可能是warp-content时，就无法确定child的宽度
+            if(layoutParams.width == LayoutParams.MATCH_PARENT){
+                matchParentViews.add(child);
+            }
+            measureChildWithMargins(child,widthMeasureSpec,0,heightMeasureSpec,0);
+            int childWidth = child.getMeasuredWidth();
+            int childHeight = child.getMeasuredHeight();
 
+            //换行设置，
+            if (lineWidth + childWidth > widthSize){
+                lineWidth = 0;
+                useHeight += lineHeight;
+            }
+
+            //set the child bound rect
+            if(childRects.size() < getChildCount()){
+                childRects.add(new Rect());
+            }
+            childRects.get(i).set(lineWidth,useHeight,lineWidth+childWidth,useHeight+childHeight);
+
+
+
+            lineWidth = lineWidth + childWidth;
+            lineHeight = Math.max(lineHeight,childHeight);
+
+
+
+            useWidth = useWidth+child.getMeasuredWidth();
+
+
+        }
+        useHeight = useHeight + lineHeight;
+        setMeasuredDimension(widthSize,useHeight);
 
     }
 
@@ -40,7 +85,15 @@ public class TagLayout extends ViewGroup {
         int length = getChildCount();
         for (int i = 0; i < length; i++) {
             View child = getChildAt(i);
-            child.layout(l,t,r,b);
+
+            child.layout(childRects.get(i).left,childRects.get(i).top,childRects.get(i).right,childRects.get(i).bottom);
         }
+    }
+
+
+
+    @Override
+    public LayoutParams generateLayoutParams(AttributeSet attrs) {
+        return new MarginLayoutParams(getContext(),attrs);
     }
 }
