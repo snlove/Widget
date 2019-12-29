@@ -17,10 +17,11 @@ public class PixUtil {
 
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
-        BitmapFactory.decodeResource(resources,resourceId,options);
-        options.inSampleSize = calculateInSampleSize(options, 0,inch);
+        BitmapFactory.decodeResource(resources, resourceId, options);
         options.inJustDecodeBounds = false;
-        return BitmapFactory.decodeResource(resources,resourceId,options);
+        options.inDensity = options.outWidth;
+        options.inTargetDensity = inch;
+        return BitmapFactory.decodeResource(resources,resourceId, options);
 
     }
 

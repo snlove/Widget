@@ -58,12 +58,12 @@ public class CircleTextView extends androidx.appcompat.widget.AppCompatTextView 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        int width = getMeasuredWidth();
-        ViewGroup.LayoutParams layoutParams = getLayoutParams();
-        if(layoutParams.width == ViewGroup.LayoutParams.WRAP_CONTENT){
-            width = width +10;
-        }
-        setMeasuredDimension(width,getMeasuredHeight());
+//        int width = getMeasuredWidth();
+//        ViewGroup.LayoutParams layoutParams = getLayoutParams();
+//        if(layoutParams.width == ViewGroup.LayoutParams.WRAP_CONTENT){
+//            width = width +10;
+//        }
+//        setMeasuredDimension(width,getMeasuredHeight());
     }
 }
 

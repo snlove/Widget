@@ -60,19 +60,18 @@ public class TagLayout extends ViewGroup {
 
             //换行设置，
 
-            if (MeasureSpec.getMode(widthMeasureSpec) != MeasureSpec.UNSPECIFIED && lineWidthUsed + childWidth > widthSize){
+            if (MeasureSpec.getMode(widthMeasureSpec) != MeasureSpec.UNSPECIFIED && lineWidthUsed + childWidth+leftMargin > widthSize){
                 lineWidthUsed = 0;
                 useHeight += lineMaxHeight + lineMaxMargin;
                 lineMaxMargin = 0;
                 lineMaxHeight = 0;
-                measureChildWithMargins(child,widthMeasureSpec,0,heightMeasureSpec,0);
             }
 
             //set the child bound rect
             if(childRects.size() < getChildCount()){
                 childRects.add(new Rect());
             }
-            childRects.get(i).set(lineWidthUsed+leftMargin,useHeight+topMargin,lineWidthUsed+childWidth,useHeight+childHeight+bottomMargin);
+            childRects.get(i).set(lineWidthUsed+leftMargin,useHeight+topMargin,lineWidthUsed+childWidth+leftMargin,useHeight+childHeight+bottomMargin);
 
 
 
