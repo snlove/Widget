@@ -1,5 +1,7 @@
 package com.sn.develop.widget;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
 import android.animation.PropertyValuesHolder;
 import android.content.Context;
@@ -202,6 +204,16 @@ public class ScaleableImage extends View implements GestureDetector.OnGestureLis
             animator.setDuration(500);
 //            animator.setFloatValues(smallScale,bigScale);
             animator.setInterpolator(new AccelerateDecelerateInterpolator());
+            animator.addListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    super.onAnimationEnd(animation);
+                    if(!big) {
+                        offsetX = 0;
+                        offsetY = 0;
+                    }
+                }
+            });
         }
         return animator;
     }
